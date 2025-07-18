@@ -1,8 +1,27 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 
 export default defineConfig({
-	plugins: [sveltekit()],
+	plugins: [
+		sveltekit(),
+		SvelteKitPWA({
+			registerType: 'autoUpdate',
+			workbox: {
+				globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}']
+			},
+			manifest: {
+				name: 'Game Score PWA',
+				short_name: 'GameScore',
+				description: 'A PWA for scoring games',
+				theme_color: '#42b883',
+				background_color: '#ffffff',
+				display: 'standalone',
+				start_url: '/',
+				scope: '/'
+			}
+		})
+	],
 	test: {
 		projects: [
 			{
