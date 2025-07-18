@@ -1,0 +1,20 @@
+name: CI & Deploy
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with: { version: '9' }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint && pnpm test
+      - run: pnpm run build
+      - uses: cloudflare/pages-action@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: game-score-pwa
+          directory: .svelte-kit/cloudflare
